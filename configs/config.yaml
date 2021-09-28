@@ -16,4 +16,4 @@ Database:
 JWT:
   Secret: go_admin_jwt__09624
   Issuer: 923727421@qq.com
-  Expire: 7200
+  Expire: 86400
