@@ -3,7 +3,7 @@
  * @Autor: 小明～
  * @Date: 2021-09-16 10:08:32
  * @LastEditors: 小明～
- * @LastEditTime: 2021-09-18 10:05:19
+ * @LastEditTime: 2021-10-14 14:14:20
  */
 package service
 
@@ -39,5 +39,11 @@ func (svc *Service) QueryUserAuth(id int) ([]int, error) {
 		UserId: id,
 	}
 	arr, err := a.QueryUserRole(svc.db)
+	return arr, err
+}
+
+func (svc *Service) QueryRoleAll() ([]model.Role, error) {
+	r := model.Role{}
+	arr, err := r.All(svc.db)
 	return arr, err
 }

@@ -3,7 +3,7 @@
  * @Autor: 小明～
  * @Date: 2021-09-16 10:02:25
  * @LastEditors: 小明～
- * @LastEditTime: 2021-09-17 15:28:44
+ * @LastEditTime: 2021-10-14 14:17:30
  */
 package v1
 
@@ -33,7 +33,7 @@ func (a User) QueryUserAuth(ctx *gin.Context) {
 	svc := service.New(ctx.Request.Context())
 	ids, err := svc.QueryUserAuth(num)
 	if err != nil {
-		util.ToResFail(ctx, errorcode.NewError(11, err.Error()))
+		util.ToResFail(ctx, errorcode.NewError(1100, err.Error()))
 		return
 	}
 	util.ToResSuccess(ctx, ids)

@@ -3,7 +3,7 @@
  * @Autor: 小明～
  * @Date: 2021-09-15 18:25:32
  * @LastEditors: 小明～
- * @LastEditTime: 2021-09-15 18:25:33
+ * @LastEditTime: 2021-10-14 15:44:29
  */
 package errorcode
 
@@ -14,6 +14,7 @@ var (
 	NotFound                  = NewError(10000002, "找不到")
 	UnauthorizedAuthNotExist  = NewError(10000003, "鉴权失败，找不到对应的AppKey和AppSecret")
 	UnauthorizedTokenError    = NewError(10000004, "鉴权失败，Token错误")
+	NotFoundToken             = NewError(10000008, "请上传Token参数")
 	UnauthorizedTokenTimeout  = NewError(10000005, "鉴权失败，Token超时")
 	UnauthorizedTokenGenerate = NewError(10000006, "鉴权失败，Token生成失败")
 	TooManyRequests           = NewError(10000007, "请求过多")

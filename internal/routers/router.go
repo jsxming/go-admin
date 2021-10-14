@@ -3,14 +3,13 @@
  * @Autor: 小明～
  * @Date: 2021-09-15 16:05:31
  * @LastEditors: 小明～
- * @LastEditTime: 2021-09-28 15:12:01
+ * @LastEditTime: 2021-10-14 14:27:21
  */
 package routers
 
 import (
 	"go-admin/internal/middleware"
-	api "go-admin/internal/routers/api/common"
-	v1 "go-admin/internal/routers/api/v1/rbac"
+	apigroup "go-admin/internal/routers/api_group"
 	"go-admin/pkg/util"
 
 	"github.com/gin-gonic/gin"
@@ -35,13 +34,14 @@ func NewRouter() *gin.Engine {
 		})
 	})
 
-	commonApi := v1Api.Group("/common")
-	common := api.NewCommonApi()
-	commonApi.POST("/login", common.Login)
-
-	userApi := v1Api.Group("/user")
-	user := v1.NewUserApi()
-	userApi.GET("/role/:id", user.QueryUserAuth)
+	// commonApi := v1Api.Group("/common")
+	// common := api.NewCommonApi()
+	// commonApi.POST("/login", common.Login)
+	apigroup.InitCommonRouter(v1Api)
+	// userApi := v1Api.Group("/user")
+	// user := v1.NewUserApi()
+	// userApi.GET("/role/:id", user.QueryUserAuth)
+	apigroup.InitRbacRouter(v1Api)
 
 	return r
 }

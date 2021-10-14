@@ -3,7 +3,7 @@
  * @Autor: 小明～
  * @Date: 2021-09-15 11:42:41
  * @LastEditors: 小明～
- * @LastEditTime: 2021-09-15 16:49:36
+ * @LastEditTime: 2021-10-14 16:00:25
  */
 package main
 
@@ -58,7 +58,7 @@ func main() {
 		WriteTimeout:   global.ServerSetting.WriteTimeout,
 		MaxHeaderBytes: 1 << 20,
 	}
-
+	fmt.Printf("Server Runing in %s \n", "http://localhost:"+global.ServerSetting.HttpPort)
 	go func() {
 		if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("s.ListenAndServe err: %v", err)
