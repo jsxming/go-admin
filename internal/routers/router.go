@@ -3,7 +3,7 @@
  * @Autor: 小明～
  * @Date: 2021-09-15 16:05:31
  * @LastEditors: 小明～
- * @LastEditTime: 2021-10-14 14:27:21
+ * @LastEditTime: 2021-10-14 16:07:56
  */
 package routers
 
@@ -27,7 +27,7 @@ func NewRouter() *gin.Engine {
 	})
 
 	v1Api := r.Group("/v1")
-	v1Api.Use(middleware.JWT())
+	// v1Api.Use(middleware.JWT())
 	v1Api.GET("/test", func(ctx *gin.Context) {
 		ctx.JSON(200, gin.H{
 			"test": "test",
