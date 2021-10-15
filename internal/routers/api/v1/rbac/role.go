@@ -3,25 +3,27 @@
  * @Autor: 小明～
  * @Date: 2021-10-14 14:11:37
  * @LastEditors: 小明～
- * @LastEditTime: 2021-10-14 14:16:47
+ * @LastEditTime: 2021-10-14 18:07:21
  */
 package v1
 
 import (
+	"fmt"
 	"go-admin/internal/service"
 	"go-admin/pkg/errorcode"
 	"go-admin/pkg/util"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
-type Role struct{}
+// type Role struct{}
 
-func NewRoleApi() Role {
-	return Role{}
-}
+// func NewRoleApi() Role {
+// 	return Role{}
+// }
 
-func (r Role) QueryRoleAll(ctx *gin.Context) {
+func QueryRoleAll(ctx *gin.Context) {
 	svc := service.New(ctx.Request.Context())
 	roleArr, err := svc.QueryRoleAll()
 	if err != nil {
@@ -29,4 +31,44 @@ func (r Role) QueryRoleAll(ctx *gin.Context) {
 		return
 	}
 	util.ToResSuccess(ctx, roleArr)
+}
+
+func QueryRoleAuth(ctx *gin.Context) {
+	id := ctx.Param("id")
+	num, err := strconv.Atoi(id)
+	if err != nil {
+		util.ToResFail(ctx, errorcode.InvalidParams.AppendDetails(err.Error()))
+		return
+	}
+	svc := service.New(ctx.Request.Context())
+	r, err := svc.QueryRoleAuth(num)
+	if err != nil {
+		util.ToResFail(ctx, errorcode.NewError(1201, err.Error()))
+		return
+	}
+	fmt.Println(r)
+	util.ToResSuccess(ctx, r)
+}
+
+type RoleAuthParams struct {
+	RoleId int   `form:"roleId"`
+	Auth   []int `form:"auth"`
+}
+
+func UpdateRoleAuth(ctx *gin.Context) {
+	params := RoleAuthParams{}
+	_, errs := util.BindAndValid(ctx, &params)
+
+	if errs != nil {
+		util.ToResFail(ctx, errorcode.InvalidParams.AppendDetails(errs.Errors()...))
+		return
+	}
+	svc := service.New(ctx.Request.Context())
+	err := svc.UpdateRoleAuth(params.RoleId, params.Auth)
+
+	if err != nil {
+		util.ToResFail(ctx, errorcode.NewError(1202, err.Error()))
+		return
+	}
+	util.ToResSuccess(ctx, nil)
 }

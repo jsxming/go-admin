@@ -3,7 +3,7 @@
  * @Autor: 小明～
  * @Date: 2021-09-16 10:02:25
  * @LastEditors: 小明～
- * @LastEditTime: 2021-10-14 14:17:30
+ * @LastEditTime: 2021-10-14 16:47:10
  */
 package v1
 
@@ -16,13 +16,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type User struct{}
-
-func NewUserApi() User {
-	return User{}
-}
-
-func (a User) QueryUserAuth(ctx *gin.Context) {
+func QueryUserAuth(ctx *gin.Context) {
 	id := ctx.Param("id")
 	num, err := strconv.Atoi(id)
 	if err != nil {

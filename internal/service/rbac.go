@@ -3,12 +3,11 @@
  * @Autor: 小明～
  * @Date: 2021-09-16 10:08:32
  * @LastEditors: 小明～
- * @LastEditTime: 2021-10-14 16:11:14
+ * @LastEditTime: 2021-10-14 17:58:44
  */
 package service
 
 import (
-	"fmt"
 	"go-admin/internal/model"
 	"go-admin/pkg/util"
 )
@@ -45,7 +44,28 @@ func (svc *Service) QueryUserAuth(id int) ([]int, error) {
 
 func (svc *Service) QueryRoleAll() ([]model.Role, error) {
 	r := model.Role{}
-	fmt.Println("test ")
 	arr, err := r.All(svc.db)
 	return arr, err
+}
+
+func (svc *Service) QueryAuthAll() ([]model.Auth, error) {
+	r := model.Auth{}
+	arr, err := r.All(svc.db)
+	return arr, err
+}
+
+func (svc *Service) QueryRoleAuth(id int) ([]model.RoleAuth, error) {
+	r := model.RoleAuth{
+		RoleId: id,
+	}
+	arr, err := r.FindAuth(svc.db)
+	return arr, err
+}
+
+func (svc *Service) UpdateRoleAuth(id int, auths []int) error {
+	r := model.RoleAuth{
+		RoleId: id,
+	}
+	err := r.UpdateRoleAuth(svc.db, auths)
+	return err
 }

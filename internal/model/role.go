@@ -3,11 +3,15 @@
  * @Autor: 小明～
  * @Date: 2021-09-17 13:45:17
  * @LastEditors: 小明～
- * @LastEditTime: 2021-09-17 13:47:48
+ * @LastEditTime: 2021-10-14 17:57:34
  */
 package model
 
-import "gorm.io/gorm"
+import (
+	"fmt"
+
+	"gorm.io/gorm"
+)
 
 type Role struct {
 	Id       int    `json:"id"`
@@ -38,30 +42,31 @@ func (role Role) All(DB *gorm.DB) ([]Role, error) {
 	return list, err
 }
 
-// func (ra *RoleAuth) UpdateRoleAuth(roleId int, auths []int) error {
-// 	return DB.Transaction(func(tx *gorm.DB) error {
-// 		if err := tx.Where("role_id = ?", roleId).Delete(RoleAuth{}).Error; err != nil {
-// 			return err
-// 		}
-// 		userRoles := make([]RoleAuth, 0)
-// 		for _, v := range auths {
-// 			userRoles = append(userRoles, RoleAuth{
-// 				RoleId: roleId,
-// 				AuthId: v,
-// 			})
-// 		}
-// 		if err := tx.Create(&userRoles).Error; err != nil {
-// 			return err
-// 		}
-// 		return nil
-// 	})
-// }
-
 func (ra *RoleAuth) TabName() string {
 	return "role_auth"
 }
 
 func (ra RoleAuth) FindAuth(DB *gorm.DB) (result []RoleAuth, err error) {
+	fmt.Print(ra.RoleId)
 	err = DB.Where("role_id = ?", ra.RoleId).Find(&result).Error
 	return
+}
+
+func (ra RoleAuth) UpdateRoleAuth(DB *gorm.DB, auths []int) error {
+	return DB.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Where("role_id = ?", ra.RoleId).Delete(RoleAuth{}).Error; err != nil {
+			return err
+		}
+		userRoles := make([]RoleAuth, 0)
+		for _, v := range auths {
+			userRoles = append(userRoles, RoleAuth{
+				RoleId: ra.RoleId,
+				AuthId: v,
+			})
+		}
+		if err := tx.Create(&userRoles).Error; err != nil {
+			return err
+		}
+		return nil
+	})
 }
