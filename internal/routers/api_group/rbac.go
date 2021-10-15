@@ -3,7 +3,7 @@
  * @Autor: 小明～
  * @Date: 2021-10-14 14:19:26
  * @LastEditors: 小明～
- * @LastEditTime: 2021-10-14 17:26:03
+ * @LastEditTime: 2021-10-15 10:00:25
  */
 package apigroup
 
@@ -20,6 +20,7 @@ func InitRbacRouter(r *gin.RouterGroup) {
 	roleApi := r.Group("/role")
 	roleApi.GET("/all", v1.QueryRoleAll)
 	roleApi.GET("/auth/:id", v1.QueryRoleAuth)
+	roleApi.POST("/auth/update", v1.UpdateRoleAuth)
 
 	authApi := r.Group("/auth")
 	authApi.GET("/all", v1.QueryAuthAll)

@@ -3,7 +3,7 @@
  * @Autor: 小明～
  * @Date: 2021-09-15 11:42:41
  * @LastEditors: 小明～
- * @LastEditTime: 2021-10-14 16:00:25
+ * @LastEditTime: 2021-10-15 11:38:10
  */
 package main
 
@@ -114,9 +114,11 @@ func setupSetting() error {
 func setupDBEngine() error {
 	var err error
 	global.DBEngine, err = model.NewDBEngine(global.DatabaseSetting)
+
 	if err != nil {
 		return err
 	}
+	global.DBEngine.Debug()
 
 	return nil
 }

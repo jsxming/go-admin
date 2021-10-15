@@ -3,7 +3,7 @@
  * @Autor: 小明～
  * @Date: 2021-09-16 10:10:33
  * @LastEditors: 小明～
- * @LastEditTime: 2021-09-17 09:18:56
+ * @LastEditTime: 2021-10-15 10:27:54
  */
 package api
 
@@ -23,7 +23,7 @@ func NewCommonApi() *Common {
 
 func (c *Common) Login(ctx *gin.Context) {
 	params := service.LoginRequestParams{}
-	_, err := util.BindAndValid(ctx, &params)
+	err := util.BindAndValid(ctx, &params)
 
 	if err != nil {
 		util.ToResFail(ctx, errorcode.InvalidParams.AppendDetails(err.Errors()...))

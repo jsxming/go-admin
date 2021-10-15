@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        // let f= new FormData()
+        // let arr = [1,2,3]
+        // f.append('roleId',2)
+        // f.append('auth',JSON.stringify(arr))
+
+        let xhr = new XMLHttpRequest()
+        xhr.open("POST",'http://localhost:8000/v1/role/auth/update')
+        xhr.setRequestHeader("content-type",'application/json')
+        xhr.send(JSON.stringify({
+                roleId:2,
+                auth:[2,3]
+            }),true)
+            xhr.onreadystatechange = function(){
+                if(xhr.readyState===4 && xhr.status==200){
+                    console.log(xhr.responseText)
+
+                }
+            }
+        // fetch('http://localhost:8000/v1/role/auth/update',{
+        //     method:'POST',
+        //     body:JSON.stringify({
+        //         roleId:2,
+        //         auth:[1,2,3]
+        //     }),
+        //     headers: {
+        //       'content-type': 'application/json'
+        //     },
+        // }).then((res) => {
+        //     console.log(res);
+        // }).catch((err) => {
+            
+        // });
+        // let x =new XMLHttpRequest()
+        
+    </script>
+</body>
+</html>
