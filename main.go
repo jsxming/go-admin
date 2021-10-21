@@ -3,7 +3,7 @@
  * @Autor: 小明～
  * @Date: 2021-09-15 11:42:41
  * @LastEditors: 小明～
- * @LastEditTime: 2021-10-21 11:46:59
+ * @LastEditTime: 2021-10-21 11:50:52
  */
 package main
 
@@ -35,21 +35,21 @@ var (
 )
 
 func init() {
-	err := setupFlag()
+	err := initFlag()
 	if err != nil {
-		log.Fatalf("init.setupFlag err: %v", err)
+		log.Fatalf("init.initFlag err: %v", err)
 	}
-	err = setupSetting()
+	err = initSetting()
 	if err != nil {
-		log.Fatalf("init.setupSetting err: %v", err)
+		log.Fatalf("init.initSetting err: %v", err)
 	}
-	err = setupLogger()
+	err = initLogger()
 	if err != nil {
-		log.Fatalf("init.setupLogger err:%v", err)
+		log.Fatalf("init.initLogger err:%v", err)
 	}
-	err = setupDBEngine()
+	err = initDBEngine()
 	if err != nil {
-		log.Fatalf("init.setupDBEngine err: %v", err)
+		log.Fatalf("init.initDBEngine err: %v", err)
 	}
 }
 
@@ -86,7 +86,7 @@ func main() {
 	log.Println("Server exiting")
 }
 
-func setupSetting() error {
+func initSetting() error {
 	s, err := setting.NewSetting(strings.Split(config, ",")...)
 	if err != nil {
 		return err
@@ -118,7 +118,7 @@ func setupSetting() error {
 	return nil
 }
 
-func setupDBEngine() error {
+func initDBEngine() error {
 	var err error
 	global.DBEngine, err = model.NewDBEngine(global.DatabaseSetting)
 
@@ -130,7 +130,7 @@ func setupDBEngine() error {
 	return nil
 }
 
-func setupFlag() error {
+func initFlag() error {
 	flag.StringVar(&port, "port", "", "启动端口")
 	flag.StringVar(&runMode, "mode", "dev", "启动模式")
 	flag.StringVar(&config, "config", "configs/", "指定要使用的配置文件路径")
@@ -140,7 +140,7 @@ func setupFlag() error {
 	return nil
 }
 
-func setupLogger() error {
+func initLogger() error {
 	path := "storage/logs/app.log"
 	file, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 	if err != nil || os.IsNotExist(err) {

@@ -3,12 +3,11 @@
  * @Autor: 小明～
  * @Date: 2021-09-15 18:13:49
  * @LastEditors: 小明～
- * @LastEditTime: 2021-10-14 15:44:27
+ * @LastEditTime: 2021-10-21 16:30:43
  */
 package middleware
 
 import (
-	"fmt"
 	errcode "go-admin/pkg/errorcode"
 	"go-admin/pkg/util"
 
@@ -23,11 +22,11 @@ func JWT() gin.HandlerFunc {
 			ecode = errcode.Success
 		)
 		token = c.GetHeader("token")
-		fmt.Print(token, "token----")
+		// fmt.Print(token, "token----")
 		if token == "" {
 			ecode = errcode.NotFoundToken
 		} else {
-			_, err := util.ParseToken(token)
+			claims, err := util.ParseToken(token)
 			if err != nil {
 				switch err.(*jwt.ValidationError).Errors {
 				case jwt.ValidationErrorExpired:
@@ -35,6 +34,8 @@ func JWT() gin.HandlerFunc {
 				default:
 					ecode = errcode.UnauthorizedTokenError
 				}
+			} else {
+				c.Set("user", claims.User)
 			}
 		}
 

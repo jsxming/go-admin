@@ -3,7 +3,7 @@
  * @Autor: 小明～
  * @Date: 2021-09-15 18:29:32
  * @LastEditors: 小明～
- * @LastEditTime: 2021-09-16 10:42:39
+ * @LastEditTime: 2021-10-21 16:23:39
  */
 
 package util
@@ -16,7 +16,7 @@ import (
 
 func ToResSuccess(ctx *gin.Context, data interface{}) {
 	ctx.JSON(200, gin.H{
-		"code":    1,
+		"code":    200,
 		"message": "",
 		"data":    data,
 	})

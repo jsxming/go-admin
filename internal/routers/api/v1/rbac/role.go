@@ -3,12 +3,11 @@
  * @Autor: 小明～
  * @Date: 2021-10-14 14:11:37
  * @LastEditors: 小明～
- * @LastEditTime: 2021-10-15 15:25:39
+ * @LastEditTime: 2021-10-21 14:32:40
  */
 package v1
 
 import (
-	"fmt"
 	"go-admin/internal/service"
 	"go-admin/pkg/errorcode"
 	"go-admin/pkg/util"
@@ -57,7 +56,6 @@ type RoleAuthParams struct {
 func UpdateRoleAuth(ctx *gin.Context) {
 	var params RoleAuthParams
 	err := ctx.ShouldBind(&params)
-	fmt.Printf("params === %v", params)
 	if err != nil {
 		util.ToResFail(ctx, errorcode.InvalidParams.AppendDetails(err.Error()))
 		return

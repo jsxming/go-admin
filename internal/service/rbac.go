@@ -3,7 +3,7 @@
  * @Autor: 小明～
  * @Date: 2021-09-16 10:08:32
  * @LastEditors: 小明～
- * @LastEditTime: 2021-10-15 11:40:23
+ * @LastEditTime: 2021-10-21 14:18:05
  */
 package service
 
@@ -30,7 +30,7 @@ func (svc *Service) QueryUser(params *LoginRequestParams) (*LoginResult, error) 
 	r, err := u.Get(svc.db)
 	return &LoginResult{
 		Tel:   r.Tel,
-		Token: util.GenerateToken(),
+		Token: util.GenerateToken(r),
 	}, err
 }
 
