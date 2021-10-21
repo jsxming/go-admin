@@ -3,7 +3,7 @@
  * @Autor: 小明～
  * @Date: 2021-09-15 11:42:41
  * @LastEditors: 小明～
- * @LastEditTime: 2021-10-15 11:38:10
+ * @LastEditTime: 2021-10-21 11:46:59
  */
 package main
 
@@ -15,6 +15,7 @@ import (
 	"go-admin/internal/model"
 	"go-admin/internal/routers"
 	"go-admin/pkg/setting"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -22,6 +23,8 @@ import (
 	"strings"
 	"syscall"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -39,6 +42,10 @@ func init() {
 	err = setupSetting()
 	if err != nil {
 		log.Fatalf("init.setupSetting err: %v", err)
+	}
+	err = setupLogger()
+	if err != nil {
+		log.Fatalf("init.setupLogger err:%v", err)
 	}
 	err = setupDBEngine()
 	if err != nil {
@@ -131,4 +138,21 @@ func setupFlag() error {
 	flag.Parse()
 
 	return nil
+}
+
+func setupLogger() error {
+	path := "storage/logs/app.log"
+	file, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+	if err != nil || os.IsNotExist(err) {
+		_, err = os.Create(path)
+		return err
+	}
+	var log = logrus.New()
+	log.SetReportCaller(true) //输出日志中添加文件名和方法信息
+	log.Formatter = &logrus.JSONFormatter{}
+	log.SetOutput(io.MultiWriter(os.Stdout, file))
+	log.Info("init  logger  success2")
+	global.Logger = log
+
+	return err
 }

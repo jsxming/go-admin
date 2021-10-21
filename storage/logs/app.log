@@ -1,0 +1,2 @@
+{"file":"/Users/mt/go_projects/go-admin/main.go:154","func":"main.setupLogger","level":"info","msg":"init  logger  success","time":"2021-10-21T11:47:40+08:00"}
+{"file":"/Users/mt/go_projects/go-admin/main.go:154","func":"main.setupLogger","level":"info","msg":"init  logger  success2","time":"2021-10-21T11:48:14+08:00"}
