@@ -3,11 +3,12 @@
  * @Autor: 小明～
  * @Date: 2021-09-16 09:38:18
  * @LastEditors: 小明～
- * @LastEditTime: 2021-10-15 14:05:08
+ * @LastEditTime: 2021-10-28 17:35:08
  */
 package middleware
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -24,7 +25,8 @@ func Cors() gin.HandlerFunc {
 
 		// 放行所有OPTIONS方法，因为有的模板是要请求两次的
 		if method == "OPTIONS" {
-			//c.AbortWithStatus(http.StatusNoContent)
+			fmt.Println("options")
+			// c.AbortWithStatus(http.StatusNoContent)
 			c.JSON(http.StatusOK, "Options Request Ok!")
 		}
 

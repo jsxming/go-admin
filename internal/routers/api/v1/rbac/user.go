@@ -3,11 +3,12 @@
  * @Autor: 小明～
  * @Date: 2021-09-16 10:02:25
  * @LastEditors: 小明～
- * @LastEditTime: 2021-10-21 17:42:10
+ * @LastEditTime: 2021-10-28 17:44:35
  */
 package v1
 
 import (
+	"fmt"
 	"go-admin/internal/model"
 	"go-admin/internal/service"
 	"go-admin/pkg/errorcode"
@@ -37,4 +38,15 @@ func QueryUserAuth(ctx *gin.Context) {
 		return
 	}
 	util.ToResSuccess(ctx, ids)
+}
+
+func QueryUserAll(ctx *gin.Context) {
+	svc := service.New(ctx.Request.Context())
+	arr, err := svc.QueryUserAll()
+	fmt.Println("...")
+	if err != nil {
+		util.ToResFail(ctx, errorcode.SearchFail.AppendDetails(err.Error()))
+		return
+	}
+	util.ToResSuccess(ctx, arr)
 }

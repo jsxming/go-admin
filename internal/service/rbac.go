@@ -3,7 +3,7 @@
  * @Autor: 小明～
  * @Date: 2021-09-16 10:08:32
  * @LastEditors: 小明～
- * @LastEditTime: 2021-10-21 14:18:05
+ * @LastEditTime: 2021-10-28 17:28:49
  */
 package service
 
@@ -32,6 +32,12 @@ func (svc *Service) QueryUser(params *LoginRequestParams) (*LoginResult, error) 
 		Tel:   r.Tel,
 		Token: util.GenerateToken(r),
 	}, err
+}
+
+func (svc *Service) QueryUserAll() ([]model.User, error) {
+	r := model.User{}
+	arr, err := r.All(svc.db)
+	return arr, err
 }
 
 func (svc *Service) QueryUserAuth(id int) ([]int, error) {

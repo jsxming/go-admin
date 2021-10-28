@@ -3,7 +3,7 @@
  * @Autor: 小明～
  * @Date: 2021-09-16 15:03:02
  * @LastEditors: 小明～
- * @LastEditTime: 2021-09-17 10:34:36
+ * @LastEditTime: 2021-10-28 17:42:09
  */
 package model
 
@@ -13,7 +13,7 @@ type User struct {
 	ID       uint32 `json:"id"`
 	Name     string `json:"name"`
 	Tel      string `json:"tel"`
-	Password string `json:"password"`
+	Password string `json:"password" gorm:"-"`
 	NickName string `json:"nick_name"`
 }
 
