@@ -6,7 +6,7 @@ Server:
 Database:
   DBType: mysql
   UserName: root
-  Password: 11111111
+  Password: Mt962464...
   Host: 127.0.0.1:3306
   DBName: go_react_admin
   Charset: utf8
