@@ -3,7 +3,7 @@
  * @Autor: 小明～
  * @Date: 2021-10-14 16:44:08
  * @LastEditors: 小明～
- * @LastEditTime: 2021-11-06 17:44:21
+ * @LastEditTime: 2021-11-06 17:47:01
  */
 package v1
 
@@ -29,6 +29,7 @@ func QueryAuthAll(ctx *gin.Context) {
 
 func DelAuth(ctx *gin.Context) {
 	// id := ctx.
-	id, ok := ctx.Params.Get("id")
-	fmt.Println(id, ok)
+	// id, ok := ctx.Params.Get("id")
+	id := ctx.Param("id")
+	fmt.Println(id)
 }
