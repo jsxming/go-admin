@@ -3,7 +3,7 @@
  * @Autor: 小明～
  * @Date: 2021-09-15 16:05:31
  * @LastEditors: 小明～
- * @LastEditTime: 2021-10-21 16:18:48
+ * @LastEditTime: 2021-11-06 17:32:57
  */
 package routers
 
@@ -18,7 +18,7 @@ func NewRouter() *gin.Engine {
 	r := gin.Default()
 	r.Use(middleware.Cors())
 
-	r.Use(middleware.AccessLog())
+	// r.Use(middleware.AccessLog())
 	r.GET("/", func(ctx *gin.Context) {
 		ctx.JSON(200, gin.H{
 			"msg": "hello world----",
