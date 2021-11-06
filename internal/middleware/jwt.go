@@ -3,7 +3,7 @@
  * @Autor: 小明～
  * @Date: 2021-09-15 18:13:49
  * @LastEditors: 小明～
- * @LastEditTime: 2021-10-21 16:30:43
+ * @LastEditTime: 2021-11-04 15:16:01
  */
 package middleware
 
@@ -22,7 +22,6 @@ func JWT() gin.HandlerFunc {
 			ecode = errcode.Success
 		)
 		token = c.GetHeader("token")
-		// fmt.Print(token, "token----")
 		if token == "" {
 			ecode = errcode.NotFoundToken
 		} else {

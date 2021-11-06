@@ -3,14 +3,18 @@
  * @Autor: 小明～
  * @Date: 2021-09-16 15:03:02
  * @LastEditors: 小明～
- * @LastEditTime: 2021-10-28 17:42:09
+ * @LastEditTime: 2021-11-06 11:41:36
  */
 package model
 
-import "gorm.io/gorm"
+import (
+	"fmt"
+
+	"gorm.io/gorm"
+)
 
 type User struct {
-	ID       uint32 `json:"id"`
+	ID       int    `json:"id"`
 	Name     string `json:"name"`
 	Tel      string `json:"tel"`
 	Password string `json:"password" gorm:"-"`
@@ -28,6 +32,12 @@ func (a User) Get(db *gorm.DB) (User, error) {
 	db = db.Where(`tel=? and password=?`, a.Tel, a.Password)
 	err := db.First(&a).Error
 	return a, err
+}
+
+func (a User) QueryUserPage(db *gorm.DB, page, size int) ([]User, error) {
+	var result []User
+	err := db.Select(`id,name,tel,nick_name`).Where(`tel like ?%`, a.Tel).Limit(size).Offset(page * 10).Find(&result).Error
+	return result, err
 }
 
 func (u *User) TabName() string {
@@ -54,8 +64,24 @@ func (u User) All(DB *gorm.DB) ([]User, error) {
 
 func (u UserRole) QueryUserRole(DB *gorm.DB) ([]int, error) {
 	var result []int
+	fmt.Println(u.UserId, "ssss---")
 	err := DB.Table(u.TabName()).Select("role_id").Where("user_id = ?", u.UserId).Find(&result).Error
 	return result, err
+}
+
+func (u User) QueryUserAuth(DB *gorm.DB) (result []*Auth, err error) {
+	sql := `select id,path,label,parent_id,is_page from authority where id in (
+    			select auth_id from role_auth where role_id in (
+    			    select role_id from user inner join user_role on user.id = user_role.user_id where user.id =?) group by auth_id
+    		)`
+	db, _ := DB.DB()
+	rows, err := db.Query(sql, u.ID)
+	for rows.Next() {
+		item := Auth{}
+		rows.Scan(&item.Id, &item.Path, &item.Label, &item.ParentId, &item.IsPage)
+		result = append(result, &item)
+	}
+	return
 }
 
 // func UpdateUserRole(userId int, roles []int) error {

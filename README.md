@@ -3,7 +3,7 @@
  * @Autor: 小明～
  * @Date: 2021-09-15 12:03:29
  * @LastEditors: 小明～
- * @LastEditTime: 2021-10-14 17:33:25
+ * @LastEditTime: 2021-11-04 17:12:46
 -->
 ## gin react后台开发系统
 ***
@@ -20,5 +20,5 @@
 
 ###  根目录下执行air命令运行项目
 ```
-air
+go run main.go || air
 ```

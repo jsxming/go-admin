@@ -3,7 +3,7 @@
  * @Autor: 小明～
  * @Date: 2021-09-16 10:10:33
  * @LastEditors: 小明～
- * @LastEditTime: 2021-10-15 10:27:54
+ * @LastEditTime: 2021-11-04 15:58:18
  */
 package api
 
@@ -30,7 +30,8 @@ func (c *Common) Login(ctx *gin.Context) {
 		return
 	}
 	svc := service.New(ctx.Request.Context())
-	r, errs := svc.QueryUser(&params)
+	r, errs := svc.Login(&params)
+
 	if errs != nil {
 		util.ToResFail(ctx, errorcode.NewError(212, errs.Error()))
 		return
