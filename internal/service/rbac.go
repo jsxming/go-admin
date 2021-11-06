@@ -3,7 +3,7 @@
  * @Autor: 小明～
  * @Date: 2021-09-16 10:08:32
  * @LastEditors: 小明～
- * @LastEditTime: 2021-10-28 17:28:49
+ * @LastEditTime: 2021-11-06 17:12:35
  */
 package service
 
@@ -18,20 +18,35 @@ type LoginRequestParams struct {
 }
 
 type LoginResult struct {
-	Tel   string `json:"tel"`
-	Token string `json:"token"`
+	Tel   string        `json:"tel"`
+	Token string        `json:"token"`
+	Auth  []*model.Auth `json:"auth"`
 }
 
-func (svc *Service) QueryUser(params *LoginRequestParams) (*LoginResult, error) {
+func (svc *Service) Login(params *LoginRequestParams) (*LoginResult, error) {
+	u := model.User{
+		Tel:      params.Tel,
+		Password: params.Password,
+	}
+
+	user, err := u.Get(svc.db)
+	var auth []*model.Auth
+	// fmt.Println(user, err)
+	auth, err = user.QueryUserAuth(svc.db)
+	return &LoginResult{
+		Tel:   user.Tel,
+		Auth:  auth,
+		Token: util.GenerateToken(user),
+	}, err
+}
+
+func (svc *Service) QueryUser(params *LoginRequestParams) (model.User, error) {
 	u := model.User{
 		Tel:      params.Tel,
 		Password: params.Password,
 	}
 	r, err := u.Get(svc.db)
-	return &LoginResult{
-		Tel:   r.Tel,
-		Token: util.GenerateToken(r),
-	}, err
+	return r, err
 }
 
 func (svc *Service) QueryUserAll() ([]model.User, error) {
@@ -40,11 +55,19 @@ func (svc *Service) QueryUserAll() ([]model.User, error) {
 	return arr, err
 }
 
-func (svc *Service) QueryUserAuth(id int) ([]int, error) {
+func (svc *Service) QueryUserRole(id int) ([]int, error) {
 	a := model.UserRole{
 		UserId: id,
 	}
 	arr, err := a.QueryUserRole(svc.db)
+	return arr, err
+}
+
+func (svc *Service) QueryUserAuth(id int) ([]*model.Auth, error) {
+	a := model.User{
+		ID: id,
+	}
+	arr, err := a.QueryUserAuth(svc.db)
 	return arr, err
 }
 
@@ -54,10 +77,41 @@ func (svc *Service) QueryRoleAll() ([]model.Role, error) {
 	return arr, err
 }
 
-func (svc *Service) QueryAuthAll() ([]model.Auth, error) {
+type AuthTree struct {
+	Children []*AuthTree `json:"children,omitempty"`
+	model.Auth
+}
+
+func (svc *Service) QueryAuthAll() ([]AuthTree, error) {
 	r := model.Auth{}
 	arr, err := r.All(svc.db)
-	return arr, err
+	if len(arr) > 0 && err == nil {
+		m := make(map[int][]*AuthTree)
+		var tree []*AuthTree
+		for _, authItem := range arr {
+			treeNode := AuthTree{Auth: authItem, Children: nil}
+			tree = append(tree, &treeNode)
+			if authItem.ParentId != 0 {
+				if _, ok := m[authItem.ParentId]; ok {
+					m[authItem.ParentId] = append(m[authItem.ParentId], &treeNode)
+				} else {
+					m[authItem.ParentId] = []*AuthTree{&treeNode}
+				}
+			}
+		}
+		var result []AuthTree
+		for i, treeNode := range tree {
+			if _, ok := m[treeNode.Id]; ok {
+				treeNode.Children = m[treeNode.Id]
+			}
+			if treeNode.ParentId == 0 {
+				result = append(result, *tree[i])
+			}
+
+		}
+		return result, nil
+	}
+	return nil, err
 }
 
 func (svc *Service) QueryRoleAuth(id int) ([]model.RoleAuth, error) {
