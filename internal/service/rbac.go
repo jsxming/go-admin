@@ -3,7 +3,7 @@
  * @Autor: 小明～
  * @Date: 2021-09-16 10:08:32
  * @LastEditors: 小明～
- * @LastEditTime: 2021-11-06 17:12:35
+ * @LastEditTime: 2021-11-30 14:53:05
  */
 package service
 
@@ -21,6 +21,17 @@ type LoginResult struct {
 	Tel   string        `json:"tel"`
 	Token string        `json:"token"`
 	Auth  []*model.Auth `json:"auth"`
+}
+
+type AuthParams struct {
+	Id    int    `from:"id"`
+	Label string `form:"label"`
+	Path  string `form:"path"`
+}
+
+type UserRoleUpdateParams struct {
+	UserId int   `form:"userId"`
+	RoleId []int `form:"roleId"`
 }
 
 func (svc *Service) Login(params *LoginRequestParams) (*LoginResult, error) {
@@ -114,6 +125,13 @@ func (svc *Service) QueryAuthAll() ([]AuthTree, error) {
 	return nil, err
 }
 
+func (svc *Service) DelAuth(id int) error {
+	a := model.Auth{
+		Id: id,
+	}
+	return a.Del(svc.db)
+}
+
 func (svc *Service) QueryRoleAuth(id int) ([]model.RoleAuth, error) {
 	r := model.RoleAuth{
 		RoleId: id,
@@ -127,5 +145,23 @@ func (svc *Service) UpdateRoleAuth(id int, auths []int) error {
 		RoleId: id,
 	}
 	err := r.UpdateRoleAuth(svc.db, auths)
+	return err
+}
+
+func (svc *Service) UpdateAuth(params AuthParams) error {
+	r := model.Auth{
+		Id:    params.Id,
+		Label: params.Label,
+		Path:  params.Path,
+	}
+	err := r.Update(svc.db)
+	return err
+}
+
+func (svc *Service) UpdateUserRole(params UserRoleUpdateParams) error {
+	r := model.UserRole{
+		UserId: params.UserId,
+	}
+	err := r.UpdateUserRole(svc.db, params.RoleId)
 	return err
 }

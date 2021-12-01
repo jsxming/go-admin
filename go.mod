@@ -43,7 +43,10 @@ require (
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/spf13/viper v1.8.1
-	gorm.io/gorm v1.21.15
+	gorm.io/gorm v1.22.2
 )
 
-require github.com/sirupsen/logrus v1.8.1 // indirect
+require (
+	github.com/sirupsen/logrus v1.8.1 // indirect
+	gorm.io/plugin/soft_delete v1.0.4 // indirect
+)

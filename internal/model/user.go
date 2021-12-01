@@ -3,7 +3,7 @@
  * @Autor: 小明～
  * @Date: 2021-09-16 15:03:02
  * @LastEditors: 小明～
- * @LastEditTime: 2021-11-06 11:41:36
+ * @LastEditTime: 2021-11-30 14:48:18
  */
 package model
 
@@ -18,7 +18,6 @@ type User struct {
 	Name     string `json:"name"`
 	Tel      string `json:"tel"`
 	Password string `json:"password" gorm:"-"`
-	NickName string `json:"nick_name"`
 }
 
 //用户 角色
@@ -36,16 +35,12 @@ func (a User) Get(db *gorm.DB) (User, error) {
 
 func (a User) QueryUserPage(db *gorm.DB, page, size int) ([]User, error) {
 	var result []User
-	err := db.Select(`id,name,tel,nick_name`).Where(`tel like ?%`, a.Tel).Limit(size).Offset(page * 10).Find(&result).Error
+	err := db.Select(`id,name,tel`).Where(`tel like ?%`, a.Tel).Limit(size).Offset(page * 10).Find(&result).Error
 	return result, err
 }
 
 func (u *User) TabName() string {
 	return "user"
-}
-
-func (u *UserRole) TabName() string {
-	return "user_role"
 }
 
 func (u *User) Create(DB *gorm.DB) error {
@@ -58,15 +53,8 @@ func (u User) Update(DB *gorm.DB) error {
 
 func (u User) All(DB *gorm.DB) ([]User, error) {
 	var list []User
-	err := DB.Table(u.TabName()).Select("id,name").Scan(&list).Error
+	err := DB.Table(u.TabName()).Select("id,name,tel").Scan(&list).Error
 	return list, err
-}
-
-func (u UserRole) QueryUserRole(DB *gorm.DB) ([]int, error) {
-	var result []int
-	fmt.Println(u.UserId, "ssss---")
-	err := DB.Table(u.TabName()).Select("role_id").Where("user_id = ?", u.UserId).Find(&result).Error
-	return result, err
 }
 
 func (u User) QueryUserAuth(DB *gorm.DB) (result []*Auth, err error) {
@@ -84,21 +72,32 @@ func (u User) QueryUserAuth(DB *gorm.DB) (result []*Auth, err error) {
 	return
 }
 
-// func UpdateUserRole(userId int, roles []int) error {
-// 	return DB.Transaction(func(tx *gorm.DB) error {
-// 		if err := tx.Where("user_id = ?", userId).Delete(UserRole{}).Error; err != nil {
-// 			return err
-// 		}
-// 		userRoles := make([]UserRole, 0)
-// 		for _, v := range roles {
-// 			userRoles = append(userRoles, UserRole{
-// 				RoleId: v,
-// 				UserId: userId,
-// 			})
-// 		}
-// 		if err := tx.Create(&userRoles).Error; err != nil {
-// 			return err
-// 		}
-// 		return nil
-// 	})
-// }
+func (u *UserRole) TabName() string {
+	return "user_role"
+}
+
+func (u UserRole) QueryUserRole(DB *gorm.DB) ([]int, error) {
+	var result []int
+	fmt.Println(u.UserId, "ssss---")
+	err := DB.Table(u.TabName()).Select("role_id").Where("user_id = ?", u.UserId).Find(&result).Error
+	return result, err
+}
+
+func (ur UserRole) UpdateUserRole(DB *gorm.DB, roles []int) error {
+	return DB.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Where("user_id = ?", ur.UserId).Delete(UserRole{}).Error; err != nil {
+			return err
+		}
+		userRoles := make([]UserRole, 0)
+		for _, v := range roles {
+			userRoles = append(userRoles, UserRole{
+				RoleId: v,
+				UserId: ur.UserId,
+			})
+		}
+		if err := tx.Create(&userRoles).Error; err != nil {
+			return err
+		}
+		return nil
+	})
+}

@@ -3,15 +3,15 @@
  * @Autor: 小明～
  * @Date: 2021-10-14 16:44:08
  * @LastEditors: 小明～
- * @LastEditTime: 2021-11-06 17:47:01
+ * @LastEditTime: 2021-11-30 11:44:11
  */
 package v1
 
 import (
-	"fmt"
 	"go-admin/internal/service"
 	"go-admin/pkg/errorcode"
 	"go-admin/pkg/util"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -28,8 +28,33 @@ func QueryAuthAll(ctx *gin.Context) {
 }
 
 func DelAuth(ctx *gin.Context) {
-	// id := ctx.
-	// id, ok := ctx.Params.Get("id")
 	id := ctx.Param("id")
-	fmt.Println(id)
+	idInt, _ := strconv.Atoi(id)
+	svc := service.New(ctx.Request.Context())
+	err := svc.DelAuth(idInt)
+	if err != nil {
+		util.ToResFail(ctx, errorcode.DeleteFail.AppendDetails(err.Error()))
+		return
+	}
+	util.ToResSuccess(ctx, nil)
+}
+
+func UpdateAuth(ctx *gin.Context) {
+	var params service.AuthParams
+	err := ctx.ShouldBind(&params)
+	if params.Id == 0 {
+		util.ToResFail(ctx, errorcode.InvalidParams.AppendDetails())
+		return
+	}
+	if err != nil {
+		util.ToResFail(ctx, errorcode.InvalidParams.AppendDetails(err.Error()))
+		return
+	}
+	svc := service.New(ctx.Request.Context())
+	err = svc.UpdateAuth(params)
+	if err != nil {
+		util.ToResFail(ctx, errorcode.UpdateFail.AppendDetails(err.Error()))
+		return
+	}
+	util.ToResSuccess(ctx, nil)
 }

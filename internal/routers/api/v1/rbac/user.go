@@ -3,7 +3,7 @@
  * @Autor: 小明～
  * @Date: 2021-09-16 10:02:25
  * @LastEditors: 小明～
- * @LastEditTime: 2021-11-06 14:06:31
+ * @LastEditTime: 2021-11-30 14:55:04
  */
 package v1
 
@@ -12,19 +12,21 @@ import (
 	"go-admin/internal/service"
 	"go-admin/pkg/errorcode"
 	"go-admin/pkg/util"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
 func QueryUserRole(ctx *gin.Context) {
-	var id int
-	if u, ok := ctx.Get("user"); ok {
-		a := u.(model.User)
-		id = int(a.ID)
+	id := ctx.Param("id")
+	numId, err := strconv.Atoi(id)
+	if err != nil {
+		util.ToResFail(ctx, errorcode.SearchFail.AppendDetails(err.Error()))
+		return
 	}
 
 	svc := service.New(ctx.Request.Context())
-	ids, err := svc.QueryUserRole(id)
+	ids, err := svc.QueryUserRole(numId)
 	if err != nil {
 		util.ToResFail(ctx, errorcode.SearchFail.AppendDetails(err.Error()))
 		return
@@ -56,6 +58,25 @@ func QueryUserAll(ctx *gin.Context) {
 		return
 	}
 	util.ToResSuccess(ctx, arr)
+}
+
+/*
+更新用户角色
+*/
+func UpdateUserRole(ctx *gin.Context) {
+	var params service.UserRoleUpdateParams
+	err := ctx.ShouldBind(&params)
+	if err != nil {
+		util.ToResFail(ctx, errorcode.InvalidParams.AppendDetails(err.Error()))
+		return
+	}
+	svc := service.New(ctx.Request.Context())
+	err = svc.UpdateUserRole(params)
+	if err != nil {
+		util.ToResFail(ctx, errorcode.UpdateFail.AppendDetails(err.Error()))
+		return
+	}
+	util.ToResSuccess(ctx, nil)
 }
 
 // type Page struct {
