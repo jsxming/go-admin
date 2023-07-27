@@ -87,6 +87,8 @@ func main() {
 }
 
 func initSetting() error {
+	fmt.Println(config,"config---")
+
 	s, err := setting.NewSetting(strings.Split(config, ",")...)
 	if err != nil {
 		return err
